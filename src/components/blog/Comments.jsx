@@ -1,17 +1,19 @@
 import axios from 'axios';
 import React, {useState, useRef, useEffect} from 'react';
 import { useParams } from 'react-router';
+import {useUsername } from '../authWrapper/AuthContext';
 
 function Comments(){
+  const username= useUsername();
   const params = useParams();
   console.log(params);
    const [comment, setComment]=useState('');
   // const [commentList, setCommentList] = useState([]);
-  const [name, setName]=useState('');
+ // const [name, setName]=useState('');
   const [entries, setEntries]=useState([]);
 
-  const addEntry = (name, comment)=>{
-    setEntries([...entries, {name,comment}])
+  const addEntry = (username, comment)=>{
+    setEntries([...entries, {username,comment}])
   };
 
 
@@ -27,18 +29,18 @@ function Comments(){
   // }; 
   
   const textboxRef = useRef();
-  const nameboxRef = useRef();
+  //const nameboxRef = useRef();
 
   const postComment = () => {
     axios.post(`https://jsonplaceholder.typicode.com/posts/${params.post_id}/comments`,{
-      name: comment.name,
+      name: username,//comment.name,
       body: comment.comment
       
     })
-    const newEntry = {name, comment};
+    const newEntry = {username, comment};
     setEntries([...entries, newEntry]);
 
-    setName("");
+    //setName("");
     setComment("");
   }
 
@@ -46,23 +48,23 @@ function Comments(){
     textboxRef.current.focus();
   };
 
-  const focusOnNameBox = ()=>{
-    nameboxRef.current.focus();
-  };
+  // const focusOnNameBox = ()=>{
+  //   nameboxRef.current.focus();
+  // };
 
   useEffect(()=>{
     focusOnCommentBox();
   }, []);
 
-   useEffect(()=>{
-    focusOnNameBox();
-  }, []);
+  //  useEffect(()=>{
+  //   focusOnNameBox();
+  // }, []);
 
 
   return (
     <div>
     <h2 className="text-start px-2 text-2xl my-5 font-bold">Comments</h2>
-    <textarea ref={nameboxRef} value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter Name" className="bg-white p-3 rounded-2xl shadow-2xl w-170 h-10 text-left align-top py-2 my-2"></textarea>
+    {/* <textarea ref={nameboxRef} value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter Name" className="bg-white p-3 rounded-2xl shadow-2xl w-170 h-10 text-left align-top py-2 my-2"></textarea> */}
     <textarea ref={textboxRef} value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Add a comment" className="bg-white p-3 rounded-2xl shadow-2xl w-170 h-32 text-left align-top"></textarea>
     {/* postcomment function is successfully storing the comments but it does not display
     The comments werent displayed in video either  */}
@@ -81,12 +83,12 @@ function Comments(){
     {}
   {entries.map((entry, index) => (
     <li key={index}>
-      <strong className="italic">{entry.name}</strong>: {entry.comment}
+      <strong className="italic">{entry.username}</strong>: {entry.comment}
     </li>
   ))}
 </ul>}
+
 </div>}
-    
 </div>
   );
 }

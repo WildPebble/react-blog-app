@@ -3,8 +3,10 @@ import Comments from "./Comments";
 import Content from "./Content";
 import axios from "axios";
 import { useParams } from "react-router";
+import {useUsername } from '../authWrapper/AuthContext';
 
 function BlogPost(){
+  const username= useUsername();
   const params = useParams();
   const [postData, setPostData]=useState();
   const [loading, setLoading] = useState(true);
@@ -66,7 +68,8 @@ return(
 //  date={postContent.date}
     author={authorData?.name}
  />
- <Comments/>
+  {username? <Comments/>: <h1 className="italic font-bold m-20">Login to leave a comment!</h1>}
+ 
   </div>
  
 );
